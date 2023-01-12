@@ -1,5 +1,7 @@
 FROM golang:latest
 
+LABEL maintainer="Petr Filippov <globallinkliberty@gmail.com>"
+
 RUN go install golang.org/x/website/tour@latest
 WORKDIR /home
 COPY ./content /go/pkg/mod/golang.org/x/website/tour@v0.0.0-20210616181959-e0d934b43647
