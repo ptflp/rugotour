@@ -1,0 +1,320 @@
+Пакеты, переменные и функции.
+Знакомимся с базовыми составляющими любой программы на Go.
+#en: Packages, variables, and functions.
+#en: Learn the basic components of any Go program.
+
+The Go Authors
+https://golang.org
+
+* Пакеты
+#en: * Packages
+
+Каждая программа на Go состоит из пакетов.
+#en: Every Go program is made up of packages.
+
+Пакет `main` - это точка запуска программы.
+#en: Programs start running in package `main`.
+
+Программа, представленная в примере, импортирует два пакета с путями `"fmt"` и `"math/rand"`.
+#en: This program is using the packages with import paths `"fmt"` and `"math/rand"`.
+
+Существует соглашение, по которому, имя пакета совпадает с последним элементом пути импорта. Например, пакет `"math/rand"` содержит файлы, которые начинаются с оператора `package`rand`.
+#en: By convention, the package name is the same as the last element of the import path. For instance, the `"math/rand"` package comprises files that begin with the statement `package`rand`.
+
+#appengine: *Внимание:* программы выполняются в детерменированном окружении. 
+#appengine: Поэтому каждый раз при запуске примера кода,
+#appengine: `rand.Intn` будет возвращать одно и то же число.
+#appengine:
+#appengine: (Чтобы получать разные номера, нужно посеять генератор случайных чисел; подробнее в документации по [[https://golang.org/pkg/math/rand/#Seed][`rand.Seed`]].)
+
+# #appengine: *Note:* the environment in which these programs are executed is
+# #appengine: deterministic, so each time you run the example program
+# #appengine: `rand.Intn` will return the same number.
+# #appengine:
+# #appengine: (To see a different number, seed the number generator; see [[https://golang.org/pkg/math/rand/#Seed][`rand.Seed`]].)
+
+.play basics/packages.go
+
+* Импорты
+
+В этом коде импорты объединяются в один блок, обрамлённый круглыми скобочками.
+#en: This code groups the imports into a parenthesized, "factored" import statement. 
+
+Вы также можете писать импорты раздельно, например:
+#en: You can also write multiple import statements, like:
+
+	import "fmt"
+	import "math"
+
+Но использование объединенного блока ипортов считается хорошей практикой.
+#en: But it is good style to use the factored import statement.
+
+.play basics/imports.go
+
+* Экспортируемые сущности
+#en: * Exported names
+
+В Go, сущность экспортирумая, только если её имя начинается с заглавной буквы.
+Например, `Pizza` экспортируемая, так же, как и `Pi`, экспортированное из пакета `math`.
+#en: In Go, a name is exported if it begins with a capital letter.
+#en: For example, `Pizza` is an exported name, as is `Pi`, which is exported from
+#en: the `math` package.
+
+Но `pizza` и `pi` не начинаются с заглавной буквы, поэтому они не экспортируемые.
+#en: `pizza` and `pi` do not start with a capital letter, so they are not exported.
+
+Когда вы импортируете пакет, вы можете использовать только его экспортируемые сущности.
+К любым "неэкспортируемым" сущностям нет доступа извне.
+#en: When importing a package, you can refer only to its exported names.
+#en: Any "unexported" names are not accessible from outside the package.
+
+Запустите код. Обратите внимание на сообщение об ошибке.
+#en: Run the code. Notice the error message.
+
+Чтобы исправить ошибку, переименуйте `math.pi` в `math.Pi` и попробуйте снова.
+#en: To fix the error, rename `math.pi` to `math.Pi` and try it again.
+
+.play basics/exported-names.go
+
+* Функции
+#en: * Functions
+
+Функция может принимать ноль или более аргументов.
+#en: A function can take zero or more arguments.
+
+В этом примере, функция `add` принимает два аргумента типа `int`.
+#en: In this example, `add` takes two parameters of type `int`.
+
+Обратите внимание, что тип указывается _после_ имени переменной.
+#en: Notice that the type comes _after_ the variable name.
+
+Чтобы узнать больше о том, почему типы так выглядят, посмотрите [[https://blog.golang.org/gos-declaration-syntax][статью об объявлении типов в Go]].)
+#en: (For more about why types look the way they do, see the [[https://blog.golang.org/gos-declaration-syntax][article on Go's declaration syntax]].)
+
+.play basics/functions.go
+
+* Функции, продолжение
+#en: * Functions continued
+
+Если два или более аргумента функции имеет одинаковый тип, вы можете указывать тип только для последнего.
+#en: When two or more consecutive named function parameters share a type, you can omit the type from all but the last.
+
+В этом примере, мы укоротили
+#en: In this example, we shortened
+
+	x int, y int
+
+до
+#en: to
+
+	x, y int
+
+.play basics/functions-continued.go
+
+* Множественные результаты
+#en: * Multiple results
+
+Функция может возвращать любое количество результатов.
+#en: A function can return any number of results.
+
+К примеру, функция `swap` возвращает две строки.
+#en: The `swap` function returns two strings.
+
+.play basics/multiple-results.go
+
+* Именованные возвращаемые значения
+#en: * Named return values
+
+Возвращаемые значения в Go могут быть именованными. В таком случае, они трактуются как переменные, объявленные в начале функции.
+#en: Go's return values may be named. If so, they are treated as variables defined at the top of the function.
+
+Эти имена могут быть использованы для документирования смысла возвращаемых значений.
+#en: These names should be used to document the meaning of the return values.
+
+Оператор `return` без аргументов возвращает именнованные возвращаемые значения. Это называется пустым возвратом.
+#en: A `return` statement without arguments returns the named return values. This is known as a "naked" return.
+
+Возврат без значений должен использоваться только в коротких функциях, как в примере, показанном здесь. В длинных функциях это может привести к ухудшению читаемости.
+#en: Naked return statements should be used only in short functions, as with the example shown here. They can harm readability in longer functions.
+
+.play basics/named-results.go
+
+* Переменные
+#en: * Variables
+
+Оператор `var` объявляет список переменных. Тип указывается в конце, как и в аргументах функций.
+#en: The `var` statement declares a list of variables; as in function argument lists, the type is last.
+
+Оператор `var` можно использовать на уровне пакета или функции. Оба примера есть в предоставленном коде. 
+#en: A `var` statement can be at package or function level. We see both in this example.
+
+.play basics/variables.go
+
+* Переменные с инициализацией
+#en: * Variables with initializers
+
+Объявление через `var` может включать инициализацию переменных, по одной на каждую.
+#en: A var declaration can include initializers, one per variable.
+
+Если переменная инициализирована, можно не указывать её тип. Он автоматически будет выведен из типа, возвращаемого инициализатором.
+#en: If an initializer is present, the type can be omitted; the variable will take the type of the initializer.
+
+.play basics/variables-with-initializers.go
+
+* Краткое объявление переменной
+#en: * Short variable declarations
+
+Внутри функции, оператор краткого присваивания `:=` может использоваться вместо `var` с автоматическим выведением типа. 
+#en: Inside a function, the `:=` short assignment statement can be used in place of a `var` declaration with implicit type.
+
+За пределами функций, конструкция `:=` не доступна, а каждый оператор должен начинаться с ключевых слов (`var`, `func` и т.п.)
+#en: Outside a function, every statement begins with a keyword (`var`, `func`, and so on) and so the `:=` construct is not available.
+
+.play basics/short-variable-declarations.go
+
+* Базовые типы
+#en: * Basic types
+
+Go включает следующие базовые типы
+#en: Go's basic types are
+
+	bool
+
+	string
+
+	int  int8  int16  int32  int64
+	uint uint8 uint16 uint32 uint64 uintptr
+
+	byte // псевдоним для uint8
+
+	rune // псевдоним для int32
+	     // представляет код таблицы Unicode
+
+	float32 float64
+
+	complex64 complex128
+
+Пример показывает переменные разных типов, а так же то, что объявление переменных может быть сгруппированно в блоки, по аналогии с группировкой импортируемых модулей.
+#en: The example shows variables of several types,
+#en: and also that variable declarations may be "factored" into blocks,
+#en: as with import statements.
+
+Типы `int`, `uint` и `uintptr` обычно имеют размер 32 бита на 32-ух битных системах и 64 бита на 64-ёх битных.
+#en: The `int`, `uint`, and `uintptr` types are usually 32 bits wide on 32-bit systems and 64 bits wide on 64-bit systems.
+Вы должны использовать `int`, если у вас нет специальной причины использовать тип с чётким указанием размера или целочисленный тип без знака.
+#en: When you need an integer value you should use `int` unless you have a specific reason to use a sized or unsigned integer type.
+
+.play basics/basic-types.go
+
+* Нулевые значения
+#en: * Zero values
+
+Переменные, объявленные без явного начального значения получают своё _нулевое_значение_.
+#en: Variables declared without an explicit initial value are given their
+#en: _zero_value_.
+
+Нулевое значение это:
+
+- `0` - для числовых типов
+- `false` - для булевых типов, и 
+- `""` - (пустая строка) для строк.
+
+#en: The zero value is:
+
+#en: - `0` for numeric types,
+#en: - `false` for the boolean type, and
+#en: - `""` (the empty string) for strings.
+
+.play basics/zero.go
+
+* Преобразование типов
+#en: * Type conversions
+
+Выражение `T(v)` преобразует значение `v` в тип `T`.
+#en: The expression `T(v)` converts the value `v` to the type `T`.
+
+Некоторые числовые преобразования типов:
+#en: Some numeric conversions:
+
+	var i int = 42
+	var f float64 = float64(i)
+	var u uint = uint(f)
+
+Или даже проще:
+#en: Or, put more simply:
+
+	i := 42
+	f := float64(i)
+	u := uint(f)
+
+В отличии от языка C, в Go присваивание между различными переменными разных типов требуют явного преобразования типа.
+#en: Unlike in C, in Go assignment between items of different type requires an
+#en: explicit conversion.
+Попробуйте удалить `float64` или `uint` преобразование в примере и посмотрите, что произойдёт.
+#en: Try removing the `float64` or `uint` conversions in the example and see what happens.
+
+.play basics/type-conversions.go
+
+* Вывод типов
+#en: * Type inference
+
+Когда переменная объявляется без явного указания типа (используя как короткий синтаксис `:=` так и `var`=`), тип переменной выводится из значения выражения с правой стороны. 
+#en: When declaring a variable without specifying an explicit type (either by using the `:=` syntax or `var`=` expression syntax), the variable's type is inferred from the value on the right hand side.
+
+Когда правая сторона выражения типизирована, новая переменная получает тот же самый тип:
+#en: When the right hand side of the declaration is typed, the new variable is of that same type:
+
+	var i int
+	j := i // j is an int
+
+Но когда правая часть выражения содержит нетипизированную числовую константу, новое выражение может быть `int`, `float64`, или `complex128` в зависимости от точности константы:
+#en: But when the right hand side contains an untyped numeric constant, the new variable may be an `int`, `float64`, or `complex128` depending on the precision of the constant:
+
+	i := 42           // int
+	f := 3.142        // float64
+	g := 0.867 + 0.5i // complex128
+
+Попробуйте изменить начальное значение `v` в примере и посмотрите как меняется его тип.
+#en: Try changing the initial value of `v` in the example code and observe how its type is affected.
+
+.play basics/type-inference.go
+
+* Константы
+#en: * Constants
+
+Константы объявляются так же, как переменные, но с использованием ключевого слова `const`.
+#en: Constants are declared like variables, but with the `const` keyword.
+
+Константы могут быть символами, строками, булевыми или числовыми типами.
+#en: Constants can be character, string, boolean, or numeric values.
+
+Константы не могут быть объявлены с использованием короткой формы `:=`.
+#en: Constants cannot be declared using the `:=` syntax.
+
+.play basics/constants.go
+
+* Числовые константы
+#en: * Numeric Constants
+
+Числовые константы принимают значения высокой точности.
+#en: Numeric constants are high-precision _values_.
+
+Нетипизированная константа может принимать любой тип, в зависимости от контекста.
+#en: An untyped constant takes the type needed by its context.
+
+Попробуйте напечатать `needInt(Big)`.
+#en: Try printing `needInt(Big)` too.
+
+(Значение типа `int` может хранить максимум 64 битное число, а иногда даже меньше.) 
+#en: (An `int` can store at maximum a 64-bit integer, and sometimes less.)
+
+.play basics/numeric-constants.go
+
+* Поздравляем!
+#en: * Congratulations!
+
+Вы завершили этот урок!
+#en: You finished this lesson!
+
+Вы можете перейти назад к списку уроков, чтобы найти что-то новое для изучения, или продолжить со [[javascript:click('.next-page')][следующим уроком]].
+#en: You can go back to the list of [[/list][modules]] to find what to learn next, or continue with the [[javascript:click('.next-page')][next lesson]].
